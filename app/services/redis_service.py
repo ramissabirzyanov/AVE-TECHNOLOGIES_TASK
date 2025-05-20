@@ -12,10 +12,10 @@ class RedisService:
             db=settings.DB,
             decode_responses=settings.DECODE
         )
-    
+
     async def write_data(self, data: Data):
-        await self.redis.set(**data)
+        await self.redis.set(data.phone, data.address)
 
     async def check_data_by_phone(self, phone):
-        address = await self.redis.get(phone)
-        return address
+        data = await self.redis.get(phone)
+        return data

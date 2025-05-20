@@ -2,12 +2,14 @@ import pytest
 import httpx
 
 from app.main import app
-from app.services.redis_service import redis
+from app.services.redis_service import RedisService
 
+
+service = RedisService()
 
 @pytest.fixture(autouse=True)
 async def clear_redis():
-    await redis.flushdb()
+    await service.redis.flushdb()
 
 @pytest.fixture
 async def async_client():
