@@ -1,28 +1,18 @@
-from app.services.app_service import AppService
+import pytest
 
 
-async def test_write_data(client):
-    service = AppService()
-    response = await client.post("/write_data", json={
-        "phone": "89090000000",
-        "address": "г. Москва, ул. Примерная, д. 1"
-    })
-    assert response.status_code == 200
-    assert response.json() == {"status": "ok"}
-
-    value = await service.get("89090000000")
-    assert value == "г. Москва, ул. Примерная, д. 1"
-
-
-async def test_get_existing_data(client):
-    service = AppService()
-    await service.set("123", "г. Казань")
-    response = await client.get("/check_data", params={"phone": "123"})
-    assert response.status_code == 200
-    assert response.json() == {"address": "г. Казань"}
-
-
-async def test_get_non_existing_data(client):
-    response = await client.get("/check_data", params={"phone": "000"})
+@pytest.mark.asyncio
+async def test_check_data_returns_404(async_client):
+    response = await async_client.get("/check_data?phone=000")
     assert response.status_code == 404
-    assert response.json() == {"detail": "Phone not found"}
+    assert response.json() == {'detail': 'No data for 000'}
+
+
+@pytest.mark.asyncio
+async def test_write_data(async_client):
+    response = await async_client.post(url="/write_data", json={"phone": "333", "address": "г. Казань"})
+    assert response.status_code == 200
+    assert response.json() ==  {"status": "Data was written."}
+    address = await async_client.get("/check_data?phone=333")
+    assert address.json() == {"address": "г. Казань"}
+

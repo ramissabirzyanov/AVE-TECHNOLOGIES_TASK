@@ -1,12 +1,15 @@
-from fastapi import Depends
+from redis.asyncio import Redis
 
-from app.services.redis_service import RedisService
+from app.core.settings import settings
 from app.services.app_service import AppService
 
 
-async def get_redis_service() -> RedisService:
-    return RedisService()
 
-
-async def get_service(redis_service: RedisService = Depends(get_redis_service)) -> AppService:
-    return AppService(redis_service)
+async def get_service() -> AppService:
+    redis = Redis(
+        host=settings.REDISHOST,
+        port=settings.REDISPORT,
+        db=settings.DB,
+        decode_responses=settings.DECODE
+    )
+    return AppService(redis)
