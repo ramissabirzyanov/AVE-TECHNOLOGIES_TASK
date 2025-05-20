@@ -21,7 +21,6 @@ class AppService:
     async def check_data_by_phone(self, phone: str) -> Optional[str]:
         data = await self.redis.check_data_by_phone(phone)
         return data
-    
+
     async def is_phone_exist(self, phone: str) -> bool:
         return await self.redis.is_key_exist(key=phone)
-

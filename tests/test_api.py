@@ -22,6 +22,7 @@ async def test_check_data(async_client):
     assert response.status_code == 200
     assert response.json() == {"address": "г. Тестбург"}
 
+
 async def test_rewrite_data(async_client):
     await async_client.post(
         url="/write_data",
@@ -33,5 +34,3 @@ async def test_rewrite_data(async_client):
     )
     assert response.status_code == 200
     assert response.json() == {"detail": "Data was rewritten."}
-
-
