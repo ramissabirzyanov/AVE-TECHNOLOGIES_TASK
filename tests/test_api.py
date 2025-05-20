@@ -15,4 +15,3 @@ async def test_write_data(async_client):
     assert response.json() ==  {"status": "Data was written."}
     address = await async_client.get("/check_data?phone=333")
     assert address.json() == {"address": "г. Казань"}
-
