@@ -1,3 +1,5 @@
 __pycache__
 .flake8
 .env
+.pytest_cache
+dump.rdb

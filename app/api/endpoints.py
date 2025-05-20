@@ -22,4 +22,4 @@ async def chech_data(phone: str, service: AppService = Depends(get_service)):
 @router.post('/write_data')
 async def write_data(data: DataSchema, service: AppService = Depends(get_service)):
     await service.write_data(data)
-    return {"status": "Data was written."}
+    return {"detail": "Data was written."}

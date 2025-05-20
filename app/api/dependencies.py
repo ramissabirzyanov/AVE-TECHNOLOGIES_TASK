@@ -4,7 +4,6 @@ from app.core.settings import settings
 from app.services.app_service import AppService
 
 
-
 async def get_service() -> AppService:
     redis = Redis(
         host=settings.REDISHOST,

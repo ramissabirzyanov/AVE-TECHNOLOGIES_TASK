@@ -8,7 +8,6 @@ from app.main import app
 from app.services.app_service import AppService
 
 
-
 @pytest_asyncio.fixture
 async def redis_client():
     redis = Redis(
@@ -34,4 +33,3 @@ async def async_client(redis_client):
         yield ac
 
     app.dependency_overrides.clear()
-
