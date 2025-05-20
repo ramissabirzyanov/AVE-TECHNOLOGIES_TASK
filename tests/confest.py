@@ -8,9 +8,11 @@ from app.services.redis_service import RedisService
 
 service = RedisService()
 
+
 @pytest.fixture(autouse=True)
 async def clear_redis():
     await service.redis.flushdb()
+
 
 @pytest.fixture
 async def async_client():

@@ -1,8 +1,8 @@
-from app.services.app_service import Service
+from app.services.app_service import AppService
 
 
 async def test_write_data(client):
-    service = Service()
+    service = AppService()
     response = await client.post("/write_data", json={
         "phone": "89090000000",
         "address": "г. Москва, ул. Примерная, д. 1"
@@ -15,7 +15,7 @@ async def test_write_data(client):
 
 
 async def test_get_existing_data(client):
-    service = Service()
+    service = AppService()
     await service.set("123", "г. Казань")
     response = await client.get("/check_data", params={"phone": "123"})
     assert response.status_code == 200

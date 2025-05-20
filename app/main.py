@@ -1,11 +1,12 @@
 from fastapi import FastAPI
+import uvicorn
 
-
-from app.services.redis_service import redis
 from app.api.endpoints import router as api_router
 
 
-
 app = FastAPI()
-
 app.include_router(api_router, prefix="/api")
+
+
+if __name__ == "__main__":
+    uvicorn.run("main:app", reload=True)

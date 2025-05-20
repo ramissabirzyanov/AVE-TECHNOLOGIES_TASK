@@ -7,7 +7,7 @@ from app.services.redis_service import RedisService
 # Это улучшает архитектуру и упрощает тестирование.
 
 
-class Service:
+class AppService:
     def __init__(self):
         self.redis = RedisService()
 
