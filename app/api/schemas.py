@@ -6,4 +6,4 @@ class AddressSchema(BaseModel):
 
 
 class DataSchema(AddressSchema):
-    phone: int
+    phone: str
