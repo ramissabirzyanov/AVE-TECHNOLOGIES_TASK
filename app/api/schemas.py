@@ -1,10 +1,9 @@
 from pydantic import BaseModel
 
 
-class DataSchema(BaseModel):
+class AddressSchema(BaseModel):
+    address: str
+
+
+class DataSchema(AddressSchema):
     phone: int
-    address: str
-
-
-class DataResponseSchema(BaseModel):
-    address: str

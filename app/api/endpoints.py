@@ -1,6 +1,6 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, responses
 
-from app.api.schemas import DataSchema, DataResponseSchema
+from app.api.schemas import DataSchema, AddressSchema
 from app.services.app_service import AppService
 from app.api.dependencies import get_service
 from app.core.logger import logger
@@ -9,7 +9,7 @@ from app.core.logger import logger
 router = APIRouter()
 
 
-@router.get('/check_data', response_model=DataResponseSchema)
+@router.get('/data/{phone}', response_model=AddressSchema)
 async def chech_data(phone: str, service: AppService = Depends(get_service)):
     address = await service.check_data_by_phone(phone)
     logger.debug(f"data for {phone}: {address}")
@@ -18,14 +18,23 @@ async def chech_data(phone: str, service: AppService = Depends(get_service)):
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"No data for {phone}"
         )
-    return DataResponseSchema(address=address)
+    return AddressSchema(address=address)
 
 
-@router.post('/write_data')
+@router.post('/data')
 async def write_data(data: DataSchema, service: AppService = Depends(get_service)):
     logger.debug(f"data in request {data.phone}: {data.address}")
-    if await service.is_phone_exist(data.phone):
-        await service.write_data(data)
-        return {"detail": "Data was rewritten."}
     await service.write_data(data)
-    return {"detail": "Data was written."}
+    return responses.JSONResponse(status_code=201, content={"message": "Data was written."})
+
+
+@router.put('/data/{phone}')
+async def update_data(phone: str, data: AddressSchema, service: AppService = Depends(get_service)):
+    try:
+        await service.update_data_by_phone(phone, data.address)
+        return responses.JSONResponse(status_code=200, content={"message": "Data was rewritten."})
+    except KeyError as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=e
+        )

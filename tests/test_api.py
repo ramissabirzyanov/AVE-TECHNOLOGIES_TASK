@@ -1,36 +1,40 @@
-async def test_check_data_returns_404(async_client):
-    response = await async_client.get("/check_data?phone=000")
+from httpx import AsyncClient
+
+
+async def test_get_data_returns_404(async_client: AsyncClient):
+    phone = "000"
+    response = await async_client.get(f"/data/{phone}")
     assert response.status_code == 404
-    assert response.json() == {'detail': 'No data for 000'}
+    assert response.json() == {"detail": f"No data for {phone}"}
 
 
-async def test_write_data(async_client):
+async def test_post_data(async_client: AsyncClient):
     response = await async_client.post(
-        url="/write_data",
+        url="/data",
         json={"phone": "333", "address": "г. Казань"}
     )
-    assert response.status_code == 200
-    assert response.json() == {"detail": "Data was written."}
+    assert response.status_code == 201
+    assert response.json() == {"message": "Data was written."}
 
 
-async def test_check_data(async_client):
+async def test_get_data(async_client):
     await async_client.post(
-        url="/write_data",
+        url="/data",
         json={"phone": "123", "address": "г. Тестбург"}
     )
-    response = await async_client.get("/check_data?phone=123")
+    response = await async_client.get("/data/123")
     assert response.status_code == 200
     assert response.json() == {"address": "г. Тестбург"}
 
 
-async def test_rewrite_data(async_client):
+async def test_update_data(async_client):
     await async_client.post(
-        url="/write_data",
+        url="/data",
         json={"phone": "123", "address": "г. Тестбург"}
     )
-    response = await async_client.post(
-        url="/write_data",
-        json={"phone": "123", "address": "г. Тестград"}
+    response = await async_client.put(
+        url="/data/123",
+        json={"address": "г. Тестград"}
     )
     assert response.status_code == 200
-    assert response.json() == {"detail": "Data was rewritten."}
+    assert response.json() == {"message": "Data was rewritten."}
