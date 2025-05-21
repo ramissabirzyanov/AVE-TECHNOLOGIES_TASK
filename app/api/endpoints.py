@@ -31,7 +31,7 @@ async def write_data(data: DataSchema, service: AppService = Depends(get_service
 @router.put('/data/{phone}')
 async def update_data(phone: str, data: AddressSchema, service: AppService = Depends(get_service)):
     try:
-        await service.update_data_by_phone(phone, data.address)
+        await service.update_data_by_phone(phone, data)
         return responses.JSONResponse(status_code=200, content={"message": "Data was rewritten."})
     except KeyError as e:
         raise HTTPException(
