@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status, responses
+from fastapi import APIRouter, Depends, HTTPException, status, responses, Query
 
 from app.api.schemas import DataSchema, AddressSchema
 from app.services.app_service import AppService
@@ -9,10 +9,24 @@ from app.core.logger import logger
 router = APIRouter()
 
 
-@router.get('/data/{phone}', response_model=AddressSchema)
-async def chech_data(phone: str, service: AppService = Depends(get_service)):
+# @router.get('/data/{phone}', response_model=AddressSchema)
+# async def chech_data(phone: str, service: AppService = Depends(get_service)):
+#     address = await service.check_data_by_phone(phone)
+#     logger.debug(f"data for {phone}: {address}")
+#     if not address:
+#         raise HTTPException(
+#             status_code=status.HTTP_404_NOT_FOUND,
+#             detail=f"No data for {phone}"
+#         )
+#     return AddressSchema(address=address)
+
+
+@router.get('/data', response_model=AddressSchema)
+async def check_data(
+    phone: str = Query(..., description="Phone number to find data"),  # Обязательный параметр
+    service: AppService = Depends(get_service)
+):
     address = await service.check_data_by_phone(phone)
-    logger.debug(f"data for {phone}: {address}")
     if not address:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
